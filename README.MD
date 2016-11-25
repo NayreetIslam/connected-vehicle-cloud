@@ -12,5 +12,5 @@ To run the server and the client, cd into the direcotry, then run `./server.py` 
 
 0. Make sure Docker is installed and Docker daemon is running.
 1. Build the server image by running `sudo docker build -t connected-cloud .`
-2. Run the Docker container using the newly created image by `sudo docker run capstone-server`
+2. Run the Docker container using the newly created image by `sudo docker run connected-cloud`
 
