@@ -1,4 +1,4 @@
-# Autonomous Vehicle Cloud
+# Connected Vehicle Cloud
 
 Make sure to install the following dependencies:
 
