@@ -39,7 +39,8 @@ async def processCommand(command):
 
   return await options[commandReceived['type']](commandReceived)
 
-start_server = websockets.serve(handler, 'localhost', 8765)
+start_server = websockets.serve(handler, '0.0.0.0', 8765)
+print("Server listening on port 8765")
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
