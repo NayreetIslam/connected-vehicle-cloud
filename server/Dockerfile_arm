@@ -1,0 +1,35 @@
+# Start from an ARMv7 image for Debian Jessie to run on the Pi or Zybo
+FROM armv7/armhf-debian:jessie
+
+# Update the apt cache and install necessary packages
+RUN apt-get update && apt-get install -y \
+		make \
+		build-essential \
+		libssl-dev \
+		zlib1g-dev \
+		libbz2-dev \
+		libsqlite3-dev \
+		libssl-dev \
+		python3-pip \
+		wget
+
+# Download, compile, and install Python 3.5.2 without overwriting existing
+RUN wget https://www.python.org/ftp/python/3.5.2/Python-3.5.2.tgz && tar -zxvf Python-3.5.2.tgz
+RUN cd Py* && ./configure && make && make altinstall
+
+# Upgrade pip for Python 3.5
+RUN pip3.5 install --upgrade pip
+
+# Set the /src folder to the working directory and copy in the project files
+WORKDIR /src
+ADD server.py /src
+ADD requirements.txt /src
+
+# Install the project's dependencies
+RUN pip3.5 install -r requirements.txt
+
+# Expose the port used by the server
+EXPOSE 8765
+
+# Run the server unless overridden
+CMD python3.5 -u ./server.py

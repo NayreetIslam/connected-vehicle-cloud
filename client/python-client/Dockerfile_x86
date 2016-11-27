@@ -1,0 +1,18 @@
+# Start from an x86 image of Alpine Linux configured for Python projects
+FROM frolvlad/alpine-python3
+
+# Update the package cache and bash
+RUN apk update
+RUN apk add --update bash
+
+# Set /src to be the working directory and copy in the project files
+WORKDIR /src
+ADD client.py /src
+ADD requirements.txt /src
+
+# Install the project's dependencies
+RUN pip3 install -r requirements.txt
+
+# Run the client help command unless overridden
+ENTRYPOINT ["python3.5", "-u", "./client.py"]
+CMD ["-h"]
