@@ -26,6 +26,7 @@ export default {
 
   created () {
     this.websocket = Websocket(this.onMessageReceive)
+    setTimeout(this.websocket.ping, 2000)
   },
 
   methods: {
@@ -33,7 +34,10 @@ export default {
       this.log += 'pinging 192.168.1.1\n'
     },
     onMessageReceive (data) {
-      if (data.direction === 'in') {
+      if (data.ping) {
+        this.log += `\n\n>>>> Server Response Time: ${data.ping}ms <<<<\n\n`
+        return
+      } else if (data.direction === 'in') {
         this.log += '>>> Received response\n'
       } else if (data.direction === 'out') {
         this.log += '<<< Send request\n'

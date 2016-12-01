@@ -1,7 +1,9 @@
 var WebSocket = window.WebSocket
 
 const factory = onmessage => {
-  var websocket = new WebSocket('ws://localhost:8765')
+  let websocket = new WebSocket('ws://localhost:8765')
+  let pingMS = 0
+  let pingStart
 
   function send (data) {
     onmessage({
@@ -12,10 +14,22 @@ const factory = onmessage => {
   }
 
   websocket.onmessage = e => {
+    const data = JSON.parse(e.data)
+    if (data.payload === 'pong') {
+      pingMS = Date.now() - pingStart
+    }
     onmessage({
       direction: 'in',
-      data: JSON.parse(e.data)
+      data
     })
+
+    if (pingMS) {
+      onmessage({
+        ping: pingMS
+      })
+      pingMS = 0
+      pingStart = undefined
+    }
   }
 
   const read = filename => {
@@ -35,9 +49,19 @@ const factory = onmessage => {
     send(data)
   }
 
+  const ping = () => {
+    const data = {
+      type: 'ping'
+    }
+    pingMS = 0
+    pingStart = Date.now()
+    send(data)
+  }
+
   return {
     read,
-    write
+    write,
+    ping
   }
 }
 

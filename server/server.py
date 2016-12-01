@@ -13,6 +13,9 @@ async def readFile(command):
   async with aiofiles.open(command['payload'], mode='r') as f:
     return await f.read()
 
+async def ping(command):
+    return 'pong'
+
 async def handler(websocket, path):
   while True:
     try:
@@ -25,8 +28,6 @@ async def handler(websocket, path):
     except websockets.exceptions.ConnectionClosed:
       # print("Client disconnected")
       pass
-    
-
 
 async def processCommand(command):
   print("< {}".format(command))
@@ -35,6 +36,7 @@ async def processCommand(command):
   options = {
     'write': writeFile,
     'read': readFile,
+    'ping': ping,
   }
 
   return await options[commandReceived['type']](commandReceived)
