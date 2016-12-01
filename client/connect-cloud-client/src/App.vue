@@ -1,17 +1,20 @@
 <template>
   <div id="app">
+    <CommandWizard v-bind:websocket="websocket" />
     <ServerLog v-bind:log="log"></ServerLog>
   </div>
 </template>
 
 <script>
 import ServerLog from './components/ServerLog'
+import CommandWizard from './components/CommandWizard'
 import Websocket from './Websocket'
 
 export default {
   name: 'app',
   components: {
-    ServerLog
+    ServerLog,
+    CommandWizard
   },
 
   data () {
@@ -23,9 +26,6 @@ export default {
 
   created () {
     this.websocket = Websocket(this.onMessageReceive)
-    setTimeout(() => this.websocket.write('helloooo.txt', 'bye.'), 2000)
-    setTimeout(() => this.websocket.read('helloooo.txt'), 3000)
-    // setInterval(this.ping, 1000)
   },
 
   methods: {
@@ -52,5 +52,6 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  display: flex;
 }
 </style>
