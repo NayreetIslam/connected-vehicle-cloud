@@ -6,19 +6,20 @@ import json
 import aiofiles
 import uuid
 import os
+import static_server
 
 async def write_file(command):
     async with aiofiles.open(command['filename'], mode='w') as f:
         await f.write(command['payload'])
 
 async def read_file(command):
-    async with aiofiles.open(command['payload'], mode='r') as f:
+    async with aiofiles.open(command['payload'], mode='rb') as f:
         return await f.read()
 
 async def update_file(command):
     ext = command['payload']['ext']
     filepath = command['filepath']
-    new_filename = filePath + ext
+    new_filename = filepath + ext
     os.rename(filepath, new_filename)
     return new_filename
 
@@ -71,7 +72,7 @@ async def process_command(command):
             return await f.write(command) and response
 
 
-start_server = websockets.serve(handler, '0.0.0.0', 8765)
+start_server = websockets.serve(handler, '0.0.0.0', 8765, max_size=None)
 print("Server listening on port 8765")
 
 asyncio.get_event_loop().run_until_complete(start_server)
