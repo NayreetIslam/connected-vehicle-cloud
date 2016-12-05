@@ -7,6 +7,7 @@ import aiofiles
 import uuid
 import os
 import static_server
+import ping_server
 
 HTTP_STATIC_SERVER = "http://" + os.getenv("IP_ADDRESS", "localhost") + ":8766/"
 
@@ -43,6 +44,14 @@ async def update_file(command):
 async def ping(command):
     return 'pong'
 
+async def listdir(command):
+    files = os.listdir("./uploads")
+    response = {
+        'files': files,
+        'command_type': 'RECEIVE_DIRECTORY',
+    }
+    return response
+
 
 def is_json(myjson):
     try:
@@ -74,6 +83,7 @@ async def process_command(command):
             'read': read_file,
             'update': update_file,
             'ping': ping,
+            'listdir': listdir,
         }
 
         return await options[command_received['type']](command_received)
