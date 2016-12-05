@@ -40,7 +40,25 @@ const factory = onmessage => {
     send(data)
   }
 
-  const write = (filename, content) => {
+  const uploadFile = file => {
+    var reader = new FileReader()
+    var rawData = new ArrayBuffer()
+
+    reader.loadend = () => {
+
+    }
+    reader.onload = (e) => {
+      rawData = e.target.result
+      console.log(rawData)
+      websocket.send(rawData)
+      alert('the File has been transferred.')
+    }
+
+    reader.readAsArrayBuffer(file)
+  }
+
+  const write = (filename, content, file) => {
+    if (file) return uploadFile(file)
     const data = {
       type: 'write',
       payload: content,

@@ -13,6 +13,10 @@
       <textarea cols="40" rows="10" id="payload" v-model="payload" />
     </div>
     <div>
+      <h4>File Payload</h4>
+      <input type="file" @change="onFileChange">
+    </div>
+    <div>
       <h4>Extra parameters</h4>
       <div v-for="(item, index) in parameters">
         <ExtraParameterRow
@@ -47,7 +51,8 @@ export default {
       parameters: [{
         key: undefined,
         value: undefined
-      }]
+      }],
+      file: undefined
     }
   },
 
@@ -66,7 +71,7 @@ export default {
       })
 
       if (this.type === 'write') {
-        this.websocket.write(data.filename, data.payload)
+        this.websocket.write(data.filename, data.payload, this.file)
       } else if (this.type === 'read') {
         this.websocket.read(data.payload)
       }
@@ -91,6 +96,22 @@ export default {
         // update the value
         this.parameters[index].value = fieldValue
       }
+    },
+
+    uploadFile (file) {
+      this.file = file
+    },
+
+    onFileChange (e) {
+      var files = e.target.files || e.dataTransfer.files
+      if (!files.length) return
+      this.file = files[0]
+    },
+
+    uintToString (uintArray) {
+      const encodedString = String.fromCharCode.apply(null, uintArray)
+      const decodedString = decodeURIComponent(escape(encodedString))
+      return decodedString
     }
   }
 }
