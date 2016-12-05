@@ -8,13 +8,30 @@ import uuid
 import os
 import static_server
 
+HTTP_STATIC_SERVER = 'http://localhost:8766/'
+
 async def write_file(command):
     async with aiofiles.open(command['filename'], mode='w') as f:
         await f.write(command['payload'])
 
 async def read_file(command):
-    async with aiofiles.open(command['payload'], mode='rb') as f:
-        return await f.read()
+    types = {
+        'mp3': 'audio',
+        'wav': 'audio',
+        'mp4': 'video',
+        'jpeg': 'image',
+        'jpg': 'image',
+        'png': 'image',
+    }
+    uri = HTTP_STATIC_SERVER + command['payload']
+    type = types[command['payload'].split(".")[-1]]
+    response = {
+        'type': type,
+        'uri': uri,
+    }
+    return response
+    # async with aiofiles.open(command['payload'], mode='rb') as f:
+    #     return await f.read()
 
 async def update_file(command):
     ext = command['payload']['ext']
