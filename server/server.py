@@ -7,13 +7,16 @@ import aiofiles
 import uuid
 import os
 
-async def writeFile(command):
-  async with aiofiles.open(command['filename'], mode='w') as f:
-    await f.write(command['payload'])
 
-async def readFile(command):
-  async with aiofiles.open(command['payload'], mode='r') as f:
-    return await f.read()
+async def write_file(command):
+    async with aiofiles.open(command['filename'], mode='w') as f:
+        await f.write(command['payload'])
+
+
+async def read_file(command):
+    async with aiofiles.open(command['payload'], mode='r') as f:
+        return await f.read()
+
 
 async def updateFile(command):
     ext = command['payload']['ext']
@@ -69,7 +72,6 @@ async def processCommand(command):
         'filepath': filepath,
       }
       return await f.write(command) and response
-
 
 
 start_server = websockets.serve(handler, '0.0.0.0', 8765)
