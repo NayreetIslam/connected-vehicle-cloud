@@ -2,6 +2,10 @@
   <div id="app">
     <CommandWizard v-bind:websocket="websocket" />
     <ServerLog v-bind:log="log"></ServerLog>
+    <RenderFile
+      :uri="file ? file.uri : undefined"
+      :type="file ? file.type : undefined"
+    />
   </div>
 </template>
 
@@ -9,18 +13,21 @@
 import ServerLog from './components/ServerLog'
 import CommandWizard from './components/CommandWizard'
 import Websocket from './Websocket'
+import RenderFile from './components/RenderFile'
 
 export default {
   name: 'app',
   components: {
     ServerLog,
-    CommandWizard
+    CommandWizard,
+    RenderFile
   },
 
   data () {
     return {
       log: '',
-      websocket: undefined
+      websocket: undefined,
+      file: undefined
     }
   },
 
@@ -43,6 +50,10 @@ export default {
         this.log += '<<< Send request\n'
       }
       this.log += JSON.stringify(data.data, null, 2) + '\n\n'
+
+      if (data.data && data.data.payload && data.data.payload.uri) {
+        this.file = data.data.payload
+      }
     }
   }
 }
