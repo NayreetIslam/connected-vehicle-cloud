@@ -71,6 +71,7 @@ async def handler(websocket, path):
             }))
         except websockets.exceptions.ConnectionClosed:
             # print("Client disconnected")
+            time.sleep(1)
             pass
 
 async def process_command(command):
