@@ -1,8 +1,8 @@
 const WebSocket = window.WebSocket
 import FileUploader from './FileUploader'
 
-const factory = onmessage => {
-  let websocket = new WebSocket('ws://localhost:8765')
+const factory = (onmessage, address) => {
+  let websocket = new WebSocket(address)
   websocket.letUserKnow = onmessage
   const fileUploader = FileUploader(websocket)
   let pingMS = 0

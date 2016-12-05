@@ -14,6 +14,18 @@ import ServerLog from './components/ServerLog'
 import CommandWizard from './components/CommandWizard'
 import Websocket from './Websocket'
 import RenderFile from './components/RenderFile'
+import ping from './ping'
+
+const servers = [
+  {
+    ws: 'ws://connected-vehicle-cloud-server.cloudapp.net:8765',
+    http: 'http://connected-vehicle-cloud-server.cloudapp.net:8766'
+  },
+  {
+    ws: 'ws://localhost:8765',
+    http: 'http://localhost:8766'
+  }
+]
 
 export default {
   name: 'app',
@@ -32,14 +44,35 @@ export default {
   },
 
   created () {
-    this.websocket = Websocket(this.onMessageReceive)
-    setTimeout(this.websocket.ping, 2000)
+    const promises = servers.map(server => {
+      return new Promise((resolve, reject) => {
+        ping(server.http, responseTime => {
+          this.log += server.http + ' ' + responseTime + 'ms\n'
+          return resolve({ws: server.ws, time: responseTime})
+        })
+      })
+    })
+
+    Promise.all(promises)
+    .then(responseTimes => {
+      let closestServer
+      responseTimes.forEach(server => {
+        if (!closestServer) {
+          closestServer = server
+          return
+        }
+        if (server.time < closestServer.time) {
+          closestServer = server
+          return
+        }
+      })
+
+      this.log += '\nConnecting to ' + closestServer.ws
+      this.websocket = Websocket(this.onMessageReceive, closestServer.ws)
+    })
   },
 
   methods: {
-    ping () {
-      this.log += 'pinging 192.168.1.1\n'
-    },
     onMessageReceive (data) {
       if (data.ping) {
         this.log += `\n\n>>>> Server Response Time: ${data.ping}ms <<<<\n\n`
