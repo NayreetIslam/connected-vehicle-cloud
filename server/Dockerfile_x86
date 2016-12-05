@@ -9,6 +9,7 @@ RUN apk add --update bash
 WORKDIR /src
 ADD server.py /src
 ADD static_server.py /src
+ADD ping_server.py /src
 ADD uploads /src/uploads
 ADD requirements.txt /src
 
@@ -16,7 +17,7 @@ ADD requirements.txt /src
 RUN pip3 install -r requirements.txt
 
 # Expose the port used by the server
-EXPOSE 8765 8766
+EXPOSE 8765 8766 8767
 
 # Run the server unless overridden
 CMD python3.5 -u ./server.py
