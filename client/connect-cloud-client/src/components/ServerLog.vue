@@ -1,5 +1,5 @@
 <template>
-  <textarea id="serverlog" cols="50" rows="5" disabled>{{ log }}</textarea>
+  <textarea id="serverlog" cols="50" rows="5">{{ log }}</textarea>
 </template>
 
 <script>

@@ -17,13 +17,19 @@ import RenderFile from './components/RenderFile'
 import ping from './ping'
 
 const servers = [
-  {
-    ws: 'ws://connected-vehicle-cloud-server.cloudapp.net:8765',
-    http: 'http://connected-vehicle-cloud-server.cloudapp.net:8766'
-  },
+  // {
+  //   ws: 'ws://192.168.0.101:8765',
+  //   http: 'http://192.168.0.101:8766',
+  //   ping: 'http://192.168.0.101:8767'
+  // }
+  // {
+  //   ws: 'ws://connected-vehicle-cloud-server.cloudapp.net:8765',
+  //   http: 'http://connected-vehicle-cloud-server.cloudapp.net:8766'
+  // }
   {
     ws: 'ws://localhost:8765',
-    http: 'http://localhost:8766'
+    http: 'http://localhost:8766',
+    ping: 'http://localhost:8767'
   }
 ]
 
@@ -46,8 +52,8 @@ export default {
   created () {
     const promises = servers.map(server => {
       return new Promise((resolve, reject) => {
-        ping(server.http, responseTime => {
-          this.log += server.http + ' ' + responseTime + 'ms\n'
+        ping(server.ping, responseTime => {
+          this.log += server.ping + ' ' + responseTime + 'ms\n'
           return resolve({ws: server.ws, time: responseTime})
         })
       })
@@ -67,8 +73,11 @@ export default {
         }
       })
 
-      this.log += '\nConnecting to ' + closestServer.ws
+      this.log += '\nConnecting to ' + closestServer.ws + '\n'
       this.websocket = Websocket(this.onMessageReceive, closestServer.ws)
+      setTimeout(() => {
+        this.websocket.listdir()
+      }, 1000)
     })
   },
 

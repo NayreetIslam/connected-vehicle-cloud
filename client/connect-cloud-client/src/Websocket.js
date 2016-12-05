@@ -61,6 +61,13 @@ const factory = (onmessage, address) => {
     send(data)
   }
 
+  const listdir = () => {
+    const data = {
+      type: 'listdir'
+    }
+    send(data)
+  }
+
   const ping = () => {
     const data = {
       type: 'ping'
@@ -73,7 +80,8 @@ const factory = (onmessage, address) => {
   return {
     read,
     write,
-    ping
+    ping,
+    listdir
   }
 }
 
