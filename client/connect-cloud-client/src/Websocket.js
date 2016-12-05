@@ -1,7 +1,10 @@
-var WebSocket = window.WebSocket
+const WebSocket = window.WebSocket
+import FileUploader from './FileUploader'
 
 const factory = onmessage => {
   let websocket = new WebSocket('ws://localhost:8765')
+  websocket.letUserKnow = onmessage
+  const fileUploader = FileUploader(websocket)
   let pingMS = 0
   let pingStart
 
@@ -23,6 +26,14 @@ const factory = onmessage => {
       data
     })
 
+    // Check for command type to see if client is required to execute anything
+    if (data.payload && data.payload.command_type) {
+      if (data.payload.command_type === 'FILE_UPLOAD_COMPLETE') {
+        // Save the file extension of the file
+        fileUploader.finishUpload(data.payload)
+      }
+    }
+
     if (pingMS) {
       onmessage({
         ping: pingMS
@@ -40,25 +51,8 @@ const factory = onmessage => {
     send(data)
   }
 
-  const uploadFile = file => {
-    var reader = new FileReader()
-    var rawData = new ArrayBuffer()
-
-    reader.loadend = () => {
-
-    }
-    reader.onload = (e) => {
-      rawData = e.target.result
-      console.log(rawData)
-      websocket.send(rawData)
-      alert('the File has been transferred.')
-    }
-
-    reader.readAsArrayBuffer(file)
-  }
-
   const write = (filename, content, file) => {
-    if (file) return uploadFile(file)
+    if (file) return fileUploader.upload(file)
     const data = {
       type: 'write',
       payload: content,

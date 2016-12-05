@@ -5,6 +5,7 @@ import websockets
 import json
 import aiofiles
 import uuid
+import os
 
 async def writeFile(command):
   async with aiofiles.open(command['filename'], mode='w') as f:
@@ -13,6 +14,14 @@ async def writeFile(command):
 async def readFile(command):
   async with aiofiles.open(command['payload'], mode='r') as f:
     return await f.read()
+
+async def updateFile(command):
+    ext = command['payload']['ext']
+    filePath = command['filepath']
+    newFilename = filePath + ext
+    os.rename(filePath, newFilename)
+    return newFilename
+
 
 async def ping(command):
     return 'pong'
@@ -45,6 +54,7 @@ async def processCommand(command):
       options = {
         'write': writeFile,
         'read': readFile,
+        'update': updateFile,
         'ping': ping,
       }
 
@@ -54,7 +64,11 @@ async def processCommand(command):
     filepath = "uploads/" + str(uuid.uuid4())
     async with aiofiles.open(filepath, mode='wb') as f:
       print("[INFO] Writing to " + filepath)
-      return await f.write(command) and filepath
+      response = {
+        'command_type': 'FILE_UPLOAD_COMPLETE',
+        'filepath': filepath,
+      }
+      return await f.write(command) and response
 
 
 
