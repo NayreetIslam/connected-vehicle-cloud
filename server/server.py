@@ -8,7 +8,7 @@ import uuid
 import os
 import static_server
 
-HTTP_STATIC_SERVER = 'http://localhost:8766/'
+HTTP_STATIC_SERVER = "http://" + os.getenv("IP_ADDRESS", "localhost") + ":8766/"
 
 async def write_file(command):
     async with aiofiles.open(command['filename'], mode='w') as f:
