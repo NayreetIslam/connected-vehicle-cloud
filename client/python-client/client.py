@@ -15,18 +15,34 @@ SERVER_PORT = int(os.getenv("SERVER_PORT", 8765))
 #     print('message:\n'.format(message))
 #     await websocket.send(message)
 
-async def write_file(filename, content):
-    return json.dumps({
-        'type': 'write',
-        'filename': filename,
-        'payload': content,
-    })
+# async def write_file(filename, content):
+#     return json.dumps({
+#         'type': 'write',
+#         'filename': filename,
+#         'payload': content,
+#     })
+#
+# async def read_file(filename):
+#     return json.dumps({
+#         'type': 'read',
+#         'payload': filename,
+#     })
 
-async def read_file(filename):
-    return json.dumps({
-        'type': 'read',
-        'payload': filename,
-    })
+
+async def get_command(websocket):
+    command = input('Command: ')
+    # options = {
+    #     'write': write_file,
+    #     'read': read_file,
+    #     'update': update_file,
+    #     'ping': ping,
+    #     'listdir': listdir,
+    # }
+    # json_command = json.loads(command)
+    # return await options[json_command['type']](json_command)
+    await websocket.send(command)
+    response = await websocket.recv()
+    print("Response:\n{}".format(response))
 
 async def client(argv):
     address = '127.0.0.1'
