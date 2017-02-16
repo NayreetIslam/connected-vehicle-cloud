@@ -29,13 +29,22 @@ async def read_file(command):
         'jpeg': 'image',
         'jpg': 'image',
         'png': 'image',
+        'txt': 'text',
     }
     uri = HTTP_STATIC_SERVER + command['payload']
-    type = types[command['payload'].split(".")[-1]]
-    response = {
-        'type': type,
-        'uri': uri,
-    }
+    try:
+        type = types[command['payload'].split(".")[-1]]
+    except Exception as e:
+        response = {
+            'type': 'error',
+            'message': str(e),
+        }
+    else:
+        response = {
+            'type': type,
+            'uri': uri,
+        }
+
     return response
     # async with aiofiles.open(command['payload'], mode='rb') as f:
     #     return await f.read()
@@ -71,8 +80,13 @@ async def handler(websocket, path):
         try:
             message = await websocket.recv()
             response = await process_command(message)
+            responseType = 'success'
+            if response['type'] == 'error':
+                responseType = 'error'
+                response = response['message']
+
             await websocket.send(json.dumps({
-                'type': 'success',
+                'type': responseType,
                 'payload': response if response is not None else '',
             }))
         except websockets.exceptions.ConnectionClosed:
