@@ -11,14 +11,16 @@ def start_server(port=8766, bind="", cgi=False):
             HandlerClass=http.server.SimpleHTTPRequestHandler,
             port=port, bind=bind)
 
-# If you want cgi, set cgi to True e.g. start_server(cgi=True)
-thread = threading.Thread(target=start_server)
-thread.daemon = True
 
-try:
-    thread.start()
-except KeyboardInterrupt:
-    server.shutdown()
-    sys.exit(0)
+def init(port):
+    # If you want cgi, set cgi to True e.g. start_server(cgi=True)
+    thread = threading.Thread(target=start_server, args=(port,))
+    thread.daemon = True
+
+    try:
+        thread.start()
+    except KeyboardInterrupt:
+        server.shutdown()
+        sys.exit(0)
 
 # start_server()

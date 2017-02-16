@@ -8,8 +8,14 @@ import uuid
 import os
 import static_server
 import ping_server
+import time
 
-HTTP_STATIC_SERVER = "http://" + os.getenv("IP_ADDRESS", "localhost") + ":8766/"
+# Port initialization
+SERVER_PORT = int(os.getenv("SERVER_PORT", 8765))
+PING_PORT = int(os.getenv("PING_PORT", SERVER_PORT + 1))
+HTTP_STATIC_PORT = int(os.getenv("STATIC_PORT", PING_PORT + 1))
+HTTP_STATIC_SERVER = "http://" + os.getenv("IP_ADDRESS", "localhost") + \
+    ":" + str(HTTP_STATIC_PORT) + "/"
 
 async def write_file(command):
     async with aiofiles.open(command['filename'], mode='w') as f:
@@ -100,8 +106,11 @@ async def process_command(command):
             return await f.write(command) and response
 
 
-start_server = websockets.serve(handler, '0.0.0.0', 8765, max_size=None)
-print("Server listening on port 8765")
+start_server = websockets.serve(handler, '0.0.0.0', SERVER_PORT, max_size=None)
+print("Server listening on port " + str(SERVER_PORT))
+
+static_server.init(HTTP_STATIC_PORT)
+ping_server.init(PING_PORT)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
