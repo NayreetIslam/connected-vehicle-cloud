@@ -46,10 +46,11 @@ def determine_prio(jsonMessage):
     return 1
 
 
-async def handler(websocket, path):
+@asyncio.coroutine
+def handler(websocket, path):
     while True:
         try:
-            message = await websocket.recv()
+            message = yield from websocket.recv()
             jsonMessages = convert_to_json(message)
             if isinstance(jsonMessages, dict):
                 jsonMessages = [jsonMessages]
