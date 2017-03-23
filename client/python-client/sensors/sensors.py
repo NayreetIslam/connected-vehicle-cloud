@@ -7,6 +7,7 @@ from evdev import InputDevice, categorize, ecodes, list_devices
 from select import select
 import picamera
 from threading import Thread
+from constants import DEVICE_ID
 
 # Logging Settings
 TEMP_H = True
@@ -178,6 +179,7 @@ def init(websocket):
                     "payload": batch_data,
                     "level": "INFO",
                     "timestamp": time.time() * 1000,
+                    "device_id": DEVICE_ID,
                 })
                 for line in batch_data:
                     f.write(line + "\n")
