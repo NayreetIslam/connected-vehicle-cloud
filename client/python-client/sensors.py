@@ -147,9 +147,9 @@ def init(websocket):
     batch_data = []
 
     if BASENAME == "":
-        filename = "SenseLog-"+str(datetime.now())+".csv"
+        filename = "SenseLog-"+str(datetime.now()) + ".csv"
     else:
-        filename = BASENAME+"-"+str(datetime.now())+".csv"
+        filename = BASENAME+"-"+str(datetime.now()) + ".csv"
 
     file_setup(filename)
 

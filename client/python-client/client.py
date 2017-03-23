@@ -30,7 +30,7 @@ SERVER_PORT = int(os.getenv("SERVER_PORT", 8765))
 #     })
 
 
-async def get_command(websocket):
+def get_command(websocket):
     command = input('Command: ')
     # options = {
     #     'write': write_file,
@@ -41,8 +41,8 @@ async def get_command(websocket):
     # }
     # json_command = json.loads(command)
     # return await options[json_command['type']](json_command)
-    await websocket.send(command)
-    response = await websocket.recv()
+    yield from websocket.send(command)
+    response = yield from websocket.recv()
     print("Response:\n{}".format(response))
 
 async def client(argv):
