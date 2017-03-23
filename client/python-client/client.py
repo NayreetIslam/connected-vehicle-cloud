@@ -61,7 +61,7 @@ def client(argv):
     print('Server address is: ', address + '\n')
 
     websocketAddress = 'ws://' + address + ':' + str(SERVER_PORT)
-    websocket = yield from websockets.connect(websockerAddress)
+    websocket = yield from websockets.connect(websocketAddress)
     sensors.init(websocket)
     while True:
         yield from get_command(websocket)
