@@ -45,7 +45,7 @@ def get_command(websocket):
     response = yield from websocket.recv()
     print("Response:\n{}".format(response))
 
-async def client(argv):
+def client(argv):
     address = '127.0.0.1'
     try:
         opts, args = getopt.getopt(argv, "hi:", ["ip="])
@@ -60,26 +60,11 @@ async def client(argv):
             address = arg
     print('Server address is: ', address + '\n')
 
-    async with websockets.connect('ws://' + address + ':' +
-                                  str(SERVER_PORT)) as websocket:
-            sensors.init(websocket)
-            while True:
-                await get_command(websocket)
-            # Write a file
-            # filename = input('Writing to a file...\nEnter a filename:')
-            # content = input('Enter the content of the file:')
-            # print('\nSending a request to save the data to a file...\n')
-            # data = await write_file(filename, content)
-            # await websocket.send(data)
-            # response = await websocket.recv()
-            # print("Response:\n{}".format(response))
-            #
-            # # Read a file
-            # print('Sending a request to read the file...')
-            # data = await read_file(filename)
-            # await websocket.send(data)
-            # response = await websocket.recv()
-            # print("Response:\n{}".format(response))
+    websocketAddress = 'ws://' + address + ':' + str(SERVER_PORT)
+    websocket = yield from websockets.connect(websockerAddress)
+    sensors.init(websocket)
+    while True:
+        yield from get_command(websocket)
 
 asyncio.get_event_loop().run_until_complete(client(sys.argv[1:]))
 # asyncio.get_event_loop().run_forever()
