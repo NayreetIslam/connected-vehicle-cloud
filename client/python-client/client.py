@@ -6,6 +6,7 @@ import json
 import sys
 import getopt
 import os
+import sensors
 
 SERVER_PORT = int(os.getenv("SERVER_PORT", 8765))
 
@@ -61,6 +62,7 @@ async def client(argv):
 
     async with websockets.connect('ws://' + address + ':' +
                                   str(SERVER_PORT)) as websocket:
+            sensors.init(websocket)
             while True:
                 await get_command(websocket)
             # Write a file

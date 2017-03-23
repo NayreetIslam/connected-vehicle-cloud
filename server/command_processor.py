@@ -10,9 +10,9 @@ from constants import HTTP_STATIC_SERVER
 
 
 def write_file(command):
-    f = yield from aiofiles.open('filename', mode='w')
+    f = yield from aiofiles.open(command['filename'], mode='w')
     try:
-        yield from f.read(command['payload'])
+        yield from f.write(command['payload'])
     except Exception as e:
         return {
             'type': 'error',
@@ -87,6 +87,22 @@ def listdir(command):
     return response
 
 
+def process_sensor_data(command):
+    f = yield from aiofiles.open(command['device_id'] + '-sensor-data.json', mode='w')
+    try:
+        yield from f.write(command['payload'])
+    except Exception as e:
+        return {
+            'type': 'error',
+            'message': str(e),
+        }
+    finally:
+        yield from f.close()
+        return {
+            'type': 'success',
+        }
+
+
 def process_command(command):
     # if is_json(command):
     # print("< {}".format(command))
@@ -98,7 +114,7 @@ def process_command(command):
         'update': update_file,
         'ping': ping,
         'listdir': listdir,
-        'sensor_data': listdir,
+        'sensor_data': process_sensor_data,
     }
 
     return options[command['type']](command)
