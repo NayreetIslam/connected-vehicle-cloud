@@ -25,6 +25,10 @@ ENABLE_CAMERA = False
 LOG_AT_START = False
 WebsocketConnection = None
 sense = None
+dev = None
+camera = None
+camera = None
+logging = None
 
 def file_setup(filename):
     header = []
@@ -141,9 +145,12 @@ def init(websocket):
     global sense
     sense = SenseHat()
     run = True
+    global logging
     logging = LOG_AT_START
     show_state(logging)
+    global dev
     dev = get_joystick()
+    global batch_data
     batch_data = []
 
     if BASENAME == "":
@@ -156,7 +163,6 @@ def init(websocket):
     if DELAY > 0:
         Thread(target=timed_log).start()
 
-
     if ENABLE_CAMERA:
         camera = picamera.PiCamera()
 
@@ -166,6 +172,7 @@ def init(websocket):
         logging_event, run = check_input()
 
         if logging_event:
+            global logging
             logging = not(logging)
             show_state(logging)
 
@@ -183,12 +190,14 @@ def init(websocket):
                 })
                 for line in batch_data:
                     f.write(line + "\n")
+                global batch_data
                 batch_data = []
 
 
     with open(filename, "a") as f:
         for line in batch_data:
             f.write(line + "\n")
+            global batch_data
             batch_data = []
 
 
