@@ -2,13 +2,13 @@
 # https://github.com/Damnever/pigar
 
 # sensors.py: 6
-evdev == 0.6.4.egg
+evdev == 0.6.4
 
 # sensors.py: 8
-picamera == 1.12.egg
+picamera == 1.12
 
 # client.py: 4
 websockets == 3.2
 
 # sensors.py: 5
-sense_hat == 2.2.0.egg
+sense_hat == 2.2.0
