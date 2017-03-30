@@ -45,6 +45,7 @@ def get_command(websocket):
     response = yield from websocket.recv()
     print("Response:\n{}".format(response))
 
+
 def client(argv):
     address = '127.0.0.1'
     try:
@@ -64,7 +65,7 @@ def client(argv):
     websocket = yield from websockets.connect(websocketAddress)
     sensors.init(websocket)
     while True:
-        yield from get_command(websocket)
+        yield from sensors.run()
 
 asyncio.get_event_loop().run_until_complete(client(sys.argv[1:]))
 # asyncio.get_event_loop().run_forever()
