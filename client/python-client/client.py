@@ -6,7 +6,6 @@ import json
 import sys
 import getopt
 import os
-import sensors
 
 SERVER_PORT = int(os.getenv("SERVER_PORT", 8765))
 
@@ -32,18 +31,14 @@ SERVER_PORT = int(os.getenv("SERVER_PORT", 8765))
 
 def get_command(websocket):
     command = input('Command: ')
-    # options = {
-    #     'write': write_file,
-    #     'read': read_file,
-    #     'update': update_file,
-    #     'ping': ping,
-    #     'listdir': listdir,
-    # }
-    # json_command = json.loads(command)
-    # return await options[json_command['type']](json_command)
     yield from websocket.send(command)
     response = yield from websocket.recv()
     print("Response:\n{}".format(response))
+
+
+def listen(websocket):
+    response = yield from websocket.recv()
+    print("Received << :\n{}".format(response))
 
 
 def client(argv):
@@ -63,9 +58,9 @@ def client(argv):
 
     websocketAddress = 'ws://' + address + ':' + str(SERVER_PORT)
     websocket = yield from websockets.connect(websocketAddress)
-    sensors.init(websocket)
     while True:
-        yield from sensors.run()
+        # yield from get_command(websocket)
+        yield from listen(websocket)
 
 asyncio.get_event_loop().run_until_complete(client(sys.argv[1:]))
-# asyncio.get_event_loop().run_forever()
+asyncio.get_event_loop().run_forever()
