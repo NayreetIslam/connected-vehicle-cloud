@@ -30,6 +30,7 @@ logging = LOG_AT_START
 batch_data = []
 websocketConnection = None
 filename = None
+broadcastMessage = None
 
 
 def file_setup(filename):
@@ -107,31 +108,6 @@ def timed_log():
         time.sleep(DELAY)
 
 
-def init(websocket):
-
-    # Main Program
-    global sense
-    sense = SenseHat()
-    show_state(logging)
-
-    global websocketConnection
-    websocketConnection = websocket
-
-    if BASENAME == "":
-        global filename
-        filename = "SenseLog-"+str(datetime.now())+".csv"
-    else:
-        global filename
-        filename = BASENAME+"-"+str(datetime.now())+".csv"
-
-    file_setup(filename)
-
-    if DELAY > 0:
-        Thread(target=timed_log).start()
-
-    sense.clear()
-
-
 def run():
     global sense_data
     sense_data = get_sense_data()
@@ -142,7 +118,7 @@ def run():
         log_data()
 
     if len(batch_data) >= WRITE_FREQUENCY:
-        yield from websocketConnection.send(json.dumps({
+        yield from broadcastMessage(json.dumps({
             "type": "sensor_data",
             "payload": batch_data,
             "level": "INFO",
@@ -158,3 +134,36 @@ def run():
             print(e)
         finally:
             yield from f.close()
+
+
+def startRecording():
+    while True:
+        yield from run()
+
+
+def init(handleBroadcast):
+
+    # Main Program
+    global sense
+    sense = SenseHat()
+
+    global broadcastMessage
+    broadcastMessage = handleBroadcast
+
+    show_state(logging)
+
+    if BASENAME == "":
+        global filename
+        filename = "SenseLog-"+str(datetime.now())+".csv"
+    else:
+        global filename
+        filename = BASENAME+"-"+str(datetime.now())+".csv"
+
+    file_setup(filename)
+
+    if DELAY > 0:
+        Thread(target=timed_log).start()
+
+    sense.clear()
+
+    return sense

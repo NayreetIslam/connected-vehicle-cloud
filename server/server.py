@@ -11,8 +11,16 @@ import time
 from multiprocessing import Process
 import threading
 import constants
+import sensors
+
+# Server is responsible for 3 things:
+# 1. process information received from clients
+# 2. collect sensor data & broadcast it to connected clients
+# 3. record & stream PiCam video feed over HTTP
 
 prio_queue = queue.PriorityQueue()
+connected = set()
+sense = None
 
 
 def is_json(myjson):
@@ -46,25 +54,52 @@ def determine_prio(jsonMessage):
     return 1
 
 
+# Broadcasts message to all connected clients
+@asyncio.coroutine
+def broadcast(message):
+    print("broadcasting")
+    print(message)
+    print(len(connected))
+    for clientWebsocket in connected:
+        yield from clientWebsocket.send(message)
+
+
 @asyncio.coroutine
 def handler(websocket, path):
-    while True:
-        try:
-            message = yield from websocket.recv()
-            jsonMessages = convert_to_json(message)
-            if isinstance(jsonMessages, dict):
-                jsonMessages = [jsonMessages]
-            for command in jsonMessages:
-                timestamp = int(command['timestamp'])
-                print((determine_prio(command), timestamp))
-                prio_queue.put(
-                    (timestamp, determine_prio(command), command, websocket),
-                )
-        except websockets.exceptions.ConnectionClosed:
-            # print("Client disconnected")
-            time.sleep(1)
-            pass
+    global connected
+    # Register.
+    connected.add(websocket)
+    print("connected")
+    print(len(connected))
+    # while True:
 
+    try:
+        message = yield from websocket.recv()
+        jsonMessages = convert_to_json(message)
+        if isinstance(jsonMessages, dict):
+            jsonMessages = [jsonMessages]
+        for command in jsonMessages:
+            timestamp = int(command['timestamp'])
+            print((determine_prio(command), timestamp))
+            prio_queue.put(
+                (timestamp, determine_prio(command), command, websocket),
+            )
+    except websockets.exceptions.ConnectionClosed:
+        # print("Client disconnected")
+        time.sleep(1)
+        pass
+
+    finally:
+        try:
+            print("removing")
+            print(len(connected))
+            global connected
+            # Unregister.
+            connected.remove(websocket)
+            print("removed")
+            print(len(connected))
+        except KeyError:
+            pass
 
 def processQueue(prio_queue):
     print('processQueue starting')
@@ -88,6 +123,8 @@ def startProcessingQueue(prio_queue):
 def startQueueProcessing(prio_queue):
     thread = threading.Thread(target=startProcessingQueue, args=(prio_queue,))
     thread.daemon = True
+    global sense
+    sense = sensors.init(broadcast)
 
     try:
         print('startQueueProcessing starting')
