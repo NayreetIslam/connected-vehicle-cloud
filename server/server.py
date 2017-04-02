@@ -12,6 +12,8 @@ from multiprocessing import Process
 import threading
 import constants
 import sensors
+import car_controller
+import distance_sensor
 
 # Server is responsible for 3 things:
 # 1. process information received from clients
@@ -125,6 +127,7 @@ def startQueueProcessing(prio_queue):
     thread.daemon = True
     global sense
     sense = sensors.init(broadcast)
+    distance_sensor.init(broadcast, car_controller.stop)
 
     try:
         print('startQueueProcessing starting')
