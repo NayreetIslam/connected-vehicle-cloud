@@ -31,8 +31,15 @@ SERVER_PORT = int(os.getenv("SERVER_PORT", 8765))
 #     })
 
 
+def is_json(myjson):
+    try:
+        json_object = json.loads(myjson)
+    except TypeError:
+        return False
+    return True
+
+
 def convert_to_json(message):
-    print(message)
     if is_json(message):
         return json.loads(message)
     else:
@@ -43,7 +50,7 @@ def convert_to_json(message):
 def processMessage(message):
     message = convert_to_json(message)
     SAFE_DISTANCE = 50
-    if message["type"] is "sensor_distance_data":
+    if message["type"] == "sensor_distance_data":
         if message["payload"][0] < SAFE_DISTANCE:
             car_controller.stop()
 
@@ -58,7 +65,7 @@ def get_command(websocket):
 def listen(websocket):
     response = yield from websocket.recv()
     # print("Received << :\n{}".format(response))
-    processMessage(response)
+    yield from processMessage(response)
 
 
 def client(argv):

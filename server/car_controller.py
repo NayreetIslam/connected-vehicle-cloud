@@ -27,10 +27,10 @@ def driveBackward():
 
 
 def turnWheels(direction):
-    if direction is 'left':
+    if direction == 'left':
         GPIO.output(rightPin, GPIO.LOW)
         GPIO.output(leftPin, GPIO.HIGH)
-    elif direction is 'right':
+    elif direction == 'right':
         GPIO.output(leftPin, GPIO.LOW)
         GPIO.output(rightPin, GPIO.HIGH)
 

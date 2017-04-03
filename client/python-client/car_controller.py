@@ -3,14 +3,14 @@ import time
 
 GPIO.setmode(GPIO.BCM)
 fwdPin = 13
+bwdPin = 12
 GPIO.setup(fwdPin, GPIO.OUT)
+GPIO.setup(bwdPin, GPIO.OUT)
 
 driving = True
 
 
 def stop():
-    GPIO.output(leftPin, GPIO.LOW)
-    GPIO.output(rightPin, GPIO.LOW)
     GPIO.output(fwdPin, GPIO.LOW)
 
     if driving:
