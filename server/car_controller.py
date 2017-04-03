@@ -3,8 +3,8 @@ import time
 
 GPIO.setmode(GPIO.BCM)
 
-fwdPin = 12
-bwdPin = 13
+fwdPin = 13
+bwdPin = 12
 leftPin = 16
 rightPin = 26
 
