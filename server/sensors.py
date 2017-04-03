@@ -56,6 +56,7 @@ def file_setup(filename):
     with open(filename, "w") as f:
         f.write(",".join(str(value) for value in header) + "\n")
 
+
 # Function to collect data from the sense hat and build a string
 def get_sense_data():
     sense_data = []
@@ -91,20 +92,26 @@ def get_sense_data():
     sense_data.append(datetime.now())
     return sense_data
 
+
 def show_state(logging):
     if logging:
         sense.show_letter("Y", text_colour=[0, 100, 0])
     else:
         sense.show_letter("N", text_colour=[100, 0, 0])
 
+
 def log_data():
     output_string = ",".join(str(value) for value in sense_data)
     batch_data.append(output_string)
+
 
 def timed_log():
     while run:
         if logging is True:
             log_data()
+        eventloop = asyncio.new_event_loop()
+        asyncio.set_event_loop(eventloop)
+        eventloop.run_until_complete(run())
         time.sleep(DELAY)
 
 
@@ -136,11 +143,6 @@ def run():
             yield from f.close()
 
 
-def startRecording():
-    while True:
-        yield from run()
-
-
 def init(handleBroadcast):
 
     # Main Program
@@ -160,9 +162,7 @@ def init(handleBroadcast):
         filename = BASENAME+"-"+str(datetime.now())+".csv"
 
     file_setup(filename)
-
-    if DELAY > 0:
-        Thread(target=timed_log).start()
+    Thread(target=timed_log).start()
 
     sense.clear()
 
