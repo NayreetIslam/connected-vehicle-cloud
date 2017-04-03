@@ -8,7 +8,7 @@ from datetime import datetime
 TRIG_PIN = 17
 ECHO_PIN = 27
 DELAY = 0.03
-SAFE_DISTANCE = 8
+SAFE_DISTANCE = 105
 NUMBER_OF_SAMPLES = 5
 
 

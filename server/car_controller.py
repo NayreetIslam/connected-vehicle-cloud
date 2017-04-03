@@ -13,9 +13,12 @@ GPIO.setup(bwdPin, GPIO.OUT)
 GPIO.setup(leftPin, GPIO.OUT)
 GPIO.setup(rightPin, GPIO.OUT)
 
+driving = False
+
 
 def driveForward():
     GPIO.output(fwdPin, GPIO.HIGH)
+    driving = True
 
 
 def driveBackward():
@@ -32,10 +35,17 @@ def turnWheels(direction):
 
 
 def stop():
-    GPIO.output(fwdPin, GPIO.LOW)
-    GPIO.output(bwdPin, GPIO.LOW)
     GPIO.output(leftPin, GPIO.LOW)
     GPIO.output(rightPin, GPIO.LOW)
+    GPIO.output(fwdPin, GPIO.LOW)
+
+    if driving:
+        driving = False
+        GPIO.output(bwdPin, GPIO.HIGH)
+        time.sleep(0.10)
+        GPIO.output(bwdPin, GPIO.LOW)
+    else:
+        GPIO.output(bwdPin, GPIO.LOW)
 
 
 def cleanupResources():
