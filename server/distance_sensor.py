@@ -38,7 +38,7 @@ def start(handleBroadcast, handleStop):
 
         message = {
             "type": "sensor_distance_data",
-            "payload": [distance, datetime.now()],
+            "payload": [distance, str(datetime.now())],
             "level": "NOTICE",
             "timestamp": time.time() * 1000,
         }
