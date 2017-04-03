@@ -9,11 +9,6 @@ ECHO_PIN = 27
 DELAY = 0
 SAFE_DISTANCE = 8
 
-
-def init(handleBroadcast, handleStop):
-    Thread(target=start, args=(handleBroadcast, handleStop,)).start()
-
-
 def start(handleBroadcast, handleStop):
     while True:
         #  Create a distance reading with the hcsr04 sensor module
@@ -31,3 +26,7 @@ def start(handleBroadcast, handleStop):
             "timestamp": time.time() * 1000,
         })))
         # yield from time.sleep(DELAY)
+
+
+def init(handleBroadcast, handleStop):
+    Thread(target=start, args=(handleBroadcast, handleStop,)).start()

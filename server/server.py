@@ -134,6 +134,8 @@ def startQueueProcessing(prio_queue):
         thread.start()
     except KeyboardInterrupt:
         server.shutdown()
+        car_controller.stop()
+        car_controller.cleanupResources()
         sys.exit(0)
 
 

@@ -42,9 +42,4 @@ def cleanupResources():
     GPIO.cleanup()
 
 
-try:
-    driveForward()
-except KeyboardInterrupt:
-    stop()
-    cleanupResources()
-    raise
+driveForward()
