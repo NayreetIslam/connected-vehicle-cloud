@@ -134,8 +134,6 @@ def startQueueProcessing(prio_queue):
         thread.start()
     except KeyboardInterrupt:
         server.shutdown()
-        car_controller.stop()
-        car_controller.cleanupResources()
         sys.exit(0)
 
 
@@ -151,6 +149,11 @@ startQueueProcessing(prio_queue)
 # processQueue(prio_queue)
 
 asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+try:
+    asyncio.get_event_loop().run_forever()
+except KeyboardInterrupt:
+    car_controller.stop()
+    car_controller.cleanupResources()
+    sys.exit(0)
 
 # [{"type": "read", "payload": "hello.txt", "level": "INFO", "timestamp": "1489686823710"}, {"type": "read", "payload": "hello.txt", "level": "INFO", "timestamp": "1489686823730"}, {"type": "write", "payload": "good-bye", "filename": "hello.txt", "level": "NOTICE", "timestamp": "1489686823730"}]
