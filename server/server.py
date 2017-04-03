@@ -14,6 +14,7 @@ import constants
 import sensors
 import car_controller
 import distance_sensor
+import sys
 
 # Server is responsible for 3 things:
 # 1. process information received from clients
