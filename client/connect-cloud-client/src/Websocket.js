@@ -42,6 +42,9 @@ const factory = (onmessage, address) => {
       pingStart = undefined
     }
   }
+  websocket.onclose = () => {
+    setTimeout(() => factory(onmessage, address), 1000)
+  }
 
   const read = filename => {
     const data = {
