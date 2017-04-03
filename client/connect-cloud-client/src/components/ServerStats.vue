@@ -157,7 +157,7 @@ export default {
         dataPoints.push(50)
         min = dataPoints.length ? (Math.min(...dataPoints) - 2) : 0
         max = dataPoints.length ? (Math.max(...dataPoints) + 2) : 0
-        stepSize = 1
+        stepSize = 5
       }
       return {
         animation: false,
