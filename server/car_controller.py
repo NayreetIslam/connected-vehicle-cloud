@@ -18,6 +18,7 @@ driving = False
 
 def driveForward():
     GPIO.output(fwdPin, GPIO.HIGH)
+    global driving
     driving = True
 
 
@@ -40,6 +41,7 @@ def stop():
     GPIO.output(fwdPin, GPIO.LOW)
 
     if driving:
+        global driving
         driving = False
         GPIO.output(bwdPin, GPIO.HIGH)
         time.sleep(0.10)
