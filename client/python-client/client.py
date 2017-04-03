@@ -55,9 +55,15 @@ def client(argv):
         elif opt in ("-i", "--ip"):
             address = arg
     print('Server address is: ', address + '\n')
-
     websocketAddress = 'ws://' + address + ':' + str(SERVER_PORT)
-    websocket = yield from websockets.connect(websocketAddress)
+    try:
+        websocket = yield from websockets.connect(websocketAddress)
+    except:
+        time.sleep(1)
+        eventloop = asyncio.new_event_loop()
+        asyncio.set_event_loop(eventloop)
+        eventloop.run_until_complete(client(argv))
+        return
     while True:
         # yield from get_command(websocket)
         yield from listen(websocket)
