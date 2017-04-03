@@ -4,6 +4,7 @@ import json
 import asyncio
 from threading import Thread
 from datetime import datetime
+import RPi.GPIO as GPIO
 
 TRIG_PIN = 17
 ECHO_PIN = 27
@@ -11,6 +12,7 @@ DELAY = 0.01
 SAFE_DISTANCE = 50
 NUMBER_OF_SAMPLES = 5
 
+GPIO.setmode(GPIO.BCM)
 
 def start(handleBroadcast, handleStop):
     while True:
