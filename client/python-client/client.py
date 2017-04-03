@@ -7,6 +7,7 @@ import sys
 import getopt
 import os
 import time
+import car_controller
 
 SERVER_PORT = int(os.getenv("SERVER_PORT", 8765))
 
@@ -30,6 +31,23 @@ SERVER_PORT = int(os.getenv("SERVER_PORT", 8765))
 #     })
 
 
+def convert_to_json(message):
+    print(message)
+    if is_json(message):
+        return json.loads(message)
+    else:
+        return None
+
+
+@asyncio.coroutine
+def processMessage(message):
+    message = convert_to_json(message)
+    SAFE_DISTANCE = 50
+    if message["type"] is "sensor_distance_data":
+        if message["payload"][0] < SAFE_DISTANCE:
+            car_controller.stop()
+
+
 def get_command(websocket):
     command = input('Command: ')
     yield from websocket.send(command)
@@ -39,7 +57,8 @@ def get_command(websocket):
 
 def listen(websocket):
     response = yield from websocket.recv()
-    print("Received << :\n{}".format(response))
+    # print("Received << :\n{}".format(response))
+    processMessage(response)
 
 
 def client(argv):
