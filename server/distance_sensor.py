@@ -19,14 +19,14 @@ GPIO.output(TRIG_PIN, GPIO.LOW)
 
 def start(handleBroadcast, handleStop):
     while True:
-        GPIO.output(TRIG, GPIO.HIGH)
+        GPIO.output(TRIG_PIN, GPIO.HIGH)
         time.sleep(0.00001)
-        GPIO.output(TRIG, GPIO.LOW)
+        GPIO.output(TRIG_PIN, GPIO.LOW)
 
-        while GPIO.input(ECHO) == 0:
+        while GPIO.input(ECHO_PIN) == 0:
             pulse_start = time.time()
 
-        while GPIO.input(ECHO) == 1:
+        while GPIO.input(ECHO_PIN) == 1:
             pulse_end = time.time()
 
         pulse_duration = pulse_end - pulse_start
