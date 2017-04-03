@@ -29,8 +29,9 @@ def start(handleBroadcast, handleStop):
             "level": "NOTICE",
             "timestamp": time.time() * 1000,
         }
-        print(message)
-        handleBroadcast(json.dumps(message))
+        eventloop = asyncio.new_event_loop()
+        asyncio.set_event_loop(eventloop)
+        eventloop.run_until_complete(handleBroadcast(json.dumps(message)))
 
 
 def init(handleBroadcast, handleStop):
