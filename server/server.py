@@ -74,35 +74,27 @@ def handler(websocket, path):
     connected.add(websocket)
     print("connected")
     print(len(connected))
-    # while True:
+    while True:
 
-    try:
-        message = yield from websocket.recv()
-        jsonMessages = convert_to_json(message)
-        if isinstance(jsonMessages, dict):
-            jsonMessages = [jsonMessages]
-        for command in jsonMessages:
-            timestamp = int(command['timestamp'])
-            print((determine_prio(command), timestamp))
-            prio_queue.put(
-                (timestamp, determine_prio(command), command, websocket),
-            )
-    except websockets.exceptions.ConnectionClosed:
-        # print("Client disconnected")
-        time.sleep(1)
-        pass
-
-    finally:
         try:
-            print("removing")
-            print(len(connected))
-            global connected
-            # Unregister.
-            connected.remove(websocket)
-            print("removed")
-            print(len(connected))
-        except KeyError:
-            pass
+            message = yield from websocket.recv()
+            jsonMessages = convert_to_json(message)
+            if isinstance(jsonMessages, dict):
+                jsonMessages = [jsonMessages]
+            for command in jsonMessages:
+                timestamp = int(command['timestamp'])
+                print((determine_prio(command), timestamp))
+                prio_queue.put(
+                    (timestamp, determine_prio(command), command, websocket),
+                )
+        except websockets.exceptions.ConnectionClosed:
+            try:
+                global connected
+                # Unregister.
+                connected.remove(websocket)
+            except KeyError:
+                pass
+
 
 def processQueue(prio_queue):
     print('processQueue starting')
