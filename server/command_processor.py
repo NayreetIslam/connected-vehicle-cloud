@@ -7,6 +7,7 @@ import uuid
 import os
 import json
 from constants import HTTP_STATIC_SERVER
+import car_controller
 
 
 def write_file(command):
@@ -103,6 +104,13 @@ def process_sensor_data(command):
         }
 
 
+def process_car_controller(command):
+    if command['payload'] == 'drive':
+        car_controller.driveForward()
+    elif command['payload'] == 'stop':
+        car_controller.stop()
+
+
 def process_command(command):
     # if is_json(command):
     # print("< {}".format(command))
@@ -115,6 +123,7 @@ def process_command(command):
         'ping': ping,
         'listdir': listdir,
         'sensor_data': process_sensor_data,
+        'car_controller': process_car_controller,
     }
 
     return options[command['type']](command)

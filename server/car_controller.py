@@ -52,6 +52,3 @@ def stop():
 
 def cleanupResources():
     GPIO.cleanup()
-
-
-driveForward()
