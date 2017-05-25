@@ -60,9 +60,6 @@ def determine_prio(jsonMessage):
 # Broadcasts message to all connected clients
 @asyncio.coroutine
 def broadcast(message):
-    print("broadcasting")
-    print(message)
-    print(len(connected))
     for clientWebsocket in connected:
         yield from clientWebsocket.send(message)
 
@@ -126,6 +123,7 @@ def startQueueProcessing(prio_queue):
         print('startQueueProcessing starting')
         thread.start()
     except KeyboardInterrupt:
+        sense.clear()
         server.shutdown()
         sys.exit(0)
 

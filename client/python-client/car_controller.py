@@ -11,15 +11,16 @@ driving = True
 
 
 def stop():
-    GPIO.output(fwdPin, GPIO.LOW)
-
-    if driving:
+    if GPIO.input(fwdPin) == 1:
         global driving
         driving = False
+        GPIO.output(fwdPin, GPIO.LOW)
         GPIO.output(bwdPin, GPIO.HIGH)
         time.sleep(0.10)
         GPIO.output(bwdPin, GPIO.LOW)
+        print("sudden stop")
     else:
+        GPIO.output(fwdPin, GPIO.LOW)
         GPIO.output(bwdPin, GPIO.LOW)
 
 
