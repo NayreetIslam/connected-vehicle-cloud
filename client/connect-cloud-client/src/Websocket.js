@@ -80,11 +80,23 @@ const factory = (onmessage, address) => {
     send(data)
   }
 
+  const carController = (payload) => {
+    const data = {
+      type: 'car_controller',
+      timestamp: Date.now(),
+      level: 'CRITICAL',
+      payload
+    }
+
+    send(data)
+  }
+
   return {
     read,
     write,
     ping,
-    listdir
+    listdir,
+    carController
   }
 }
 

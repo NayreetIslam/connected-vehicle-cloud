@@ -2,11 +2,14 @@
   <div class="command-wizard">
     <div>
       <h4>Type</h4>
+      <input type="radio" id="car" value="car_controller" v-model="type">
+      <label for="car">Car controller</label>
+      <br>
       <input type="radio" id="read" value="read" v-model="type">
-      <label for="one">Read</label>
+      <label for="read">Read</label>
       <br>
       <input type="radio" id="write" value="write" v-model="type">
-      <label for="two">Write</label>
+      <label for="write">Write</label>
     </div>
     <div>
       <h4>Payload</h4>
@@ -46,7 +49,7 @@ export default {
 
   data () {
     return {
-      type: 'write',
+      type: 'car_controller',
       payload: '',
       parameters: [{
         key: undefined,
@@ -74,6 +77,8 @@ export default {
         this.websocket.write(data.filename, data.payload, this.file)
       } else if (this.type === 'read') {
         this.websocket.read(data.payload)
+      } else if (this.type === 'car_controller') {
+        this.websocket.carController(data.payload)
       }
     },
 

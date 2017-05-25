@@ -102,7 +102,7 @@ def processQueue(prio_queue):
         try:
             print('processQueue')
             yield from command_processor.process(prio_queue)
-            time.sleep(0.5)
+            time.sleep(0.1)
         except Exception as e:
             print(e)
             time.sleep(1)

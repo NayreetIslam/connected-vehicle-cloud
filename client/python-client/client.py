@@ -69,7 +69,7 @@ def listen(websocket):
 
 
 def client(argv):
-    address = '127.0.0.1'
+    address = '192.168.0.111'
     try:
         opts, args = getopt.getopt(argv, "hi:", ["ip="])
     except getopt.GetoptError:

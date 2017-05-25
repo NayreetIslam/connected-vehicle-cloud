@@ -1,7 +1,13 @@
 <template>
-  <div id='app'>
-    <ServerStats v-for="server in servers" :server="server" :key="server.ws" />
-  </div>
+  <v-app id="sidebar-example-2" class="elevation-1" top-toolbar left-fixed-sidebar sidebar-under-toolbar>
+    <v-toolbar class="secondary">
+      <v-toolbar-side-icon @click.native.stop="sidebar2 = !sidebar2" />
+      <v-toolbar-title>Connected Vehicle Cloud</v-toolbar-title>
+    </v-toolbar>
+    <div id='app' style="margin-top:0; padding: 20px;">
+      <ServerStats v-for="server in servers" :server="server" :key="server.ws" />
+    </div>
+  </v-app>
 </template>
 
 <script>
@@ -10,9 +16,9 @@ import ping from './ping'
 
 const servers = [
   {
-    ws: 'ws://192.168.0.103:8765',
-    http: 'http://192.168.0.103:8766',
-    ping: 'http://192.168.0.103:8767'
+    ws: 'ws://192.168.0.115:8765',
+    http: 'http://192.168.0.115:8766',
+    ping: 'http://192.168.0.115:8767'
   }
 ]
 
@@ -24,7 +30,12 @@ export default {
 
   data () {
     return {
-      servers
+      servers,
+      items: [
+        {
+          title: 'Command Wizard'
+        }
+      ]
     }
   },
 

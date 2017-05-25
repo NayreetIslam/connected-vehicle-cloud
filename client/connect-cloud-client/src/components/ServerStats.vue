@@ -1,11 +1,11 @@
 <template>
-  <div id='app'>
+  <div style="width: 100%;">
     <!-- <CommandWizard v-bind:websocket='websocket' /> -->
     <!-- <ServerLog v-bind:log='log'></ServerLog> -->
-    <RenderFile
+    <!-- <RenderFile
       :uri='file ? file.uri : undefined'
       :type='file ? file.type : undefined'
-    />
+    /> -->
     <LineChartComponent
       :chartData="accelerationData"
       :options="chartOptions('accelerationData')"
@@ -45,7 +45,8 @@ export default {
           {
             label: 'Acceleration',
             data: [],
-            fill: false
+            fill: false,
+            borderColor: 'purple'
           }
         ]
       },
@@ -55,12 +56,14 @@ export default {
           {
             label: 'Distance',
             data: [],
-            fill: false
+            fill: false,
+            borderColor: 'green'
           },
           {
             label: 'Safe Distance',
             data: [],
-            fill: false
+            fill: false,
+            borderColor: 'red'
           }
         ]
       }
@@ -107,7 +110,8 @@ export default {
         const dataset = {
           label: 'Acceleration',
           data: [...this.accelerationData.datasets[0].data],
-          fill: false
+          fill: false,
+          borderColor: 'purple'
         }
         dataset.data.push(parseFloat(accX).toFixed(2))
         dataset.data = dataset.data.slice(-maxPointCoint)
@@ -128,12 +132,14 @@ export default {
         const dataset = {
           label: 'Distance',
           data: [...this.distanceData.datasets[0].data],
-          fill: false
+          fill: false,
+          borderColor: 'green'
         }
         const safetyDataset = {
           label: 'Safe Distance',
           data: [...this.distanceData.datasets[1].data],
-          fill: false
+          fill: false,
+          borderColor: 'red'
         }
         dataset.data.push(parseFloat(distance).toFixed(2))
         dataset.data = dataset.data.slice(-maxPointCoint)
