@@ -19,7 +19,7 @@ import sys
 # Server is responsible for 3 things:
 # 1. process information received from clients
 # 2. collect sensor data & broadcast it to connected clients
-# 3. record & stream PiCam video feed over HTTP ..
+# 3. record & stream PiCam video feed over HTTP 
 
 prio_queue = queue.PriorityQueue()
 connected = set()
