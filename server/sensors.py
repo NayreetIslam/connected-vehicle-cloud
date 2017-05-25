@@ -95,7 +95,7 @@ def get_sense_data():
 
 def show_state(logging):
     if logging:
-        sense.show_letter("Y", text_colour=[0, 100, 0])
+        sense.show_letter("R", text_colour=[100, 0, 0])
     else:
         sense.show_letter("N", text_colour=[100, 0, 0])
 
